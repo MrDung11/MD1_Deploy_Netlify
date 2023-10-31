@@ -1,0 +1,294 @@
+<!DOCTYPE html<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <title>Title</title>
+    <script src="User.js"></script>
+</head>
+<body>
+<section class="vh-100" style="background-color: #eee;">
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+
+                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
+
+                                <label id="success" style="color: blue" class="form-label"></label>
+                                <div class="d-flex flex-row align-items-center mb-4">
+
+                                    <div class="form-outline flex-fill mb-0">
+
+                                        <input oninput="validateCheck()" type="text" id="name" class="form-control"/>
+                                        <label id="validate-name" class="form-label">Your Name</label>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center mb-4">
+
+                                    <div class="form-outline flex-fill mb-0">
+                                        <input oninput="validateCheck()" type="text" id="username"
+                                               class="form-control"/>
+                                        <label id="validate-user-name" class="form-label">Username</label>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-row align-items-center mb-4">
+
+                                    <div class="form-outline flex-fill mb-0">
+                                        <input oninput="validateCheck()" type="email" id="email" class="form-control"/>
+                                        <label id="validate-email" class="form-label">Your Email</label>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-row align-items-center mb-4">
+
+                                    <div class="form-outline flex-fill mb-0">
+                                        <input oninput="validateCheck()" type="password" id="password"
+                                               class="form-control"/>
+                                        <label id="validate-password" class="form-label">Password</label>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-row align-items-center mb-4">
+
+                                    <div class="form-outline flex-fill mb-0">
+                                        <input oninput="validateCheck()" type="password" id="repeatPassword"
+                                               class="form-control"/>
+                                        <p id="validate-repeatPassword" class="form-label">Repeat your
+                                            password</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                    <button disabled id="btn-register" type="button" class="btn btn-primary btn-lg"
+                                            onclick="register()">Register
+                                    </button>
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                                     class="img-fluid" alt="Sample image">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    let listUser = localStorage.getItem('listUser');
+    let name;
+    let username;
+    let email;
+    let password;
+    let repeatPassword;
+    let validateName;
+    let validateUsername;
+    let validate_Email;
+    let validatePassword;
+    let validateRepeatPassword;
+    if (listUser == null) {
+        listUser = [];
+    } else {
+        listUser = JSON.parse(localStorage.getItem('listUser'));
+    }
+
+
+    function validateCheck() {
+         validateName = document.getElementById('validate-name');
+         validateUsername = document.getElementById('validate-user-name');
+         validate_Email = document.getElementById('validate-email');
+         validatePassword = document.getElementById('validate-password');
+         validateRepeatPassword = document.getElementById('validate-repeatPassword');
+        name = document.getElementById('name').value;
+        username = document.getElementById('username').value;
+        email = document.getElementById('email').value;
+        password = document.getElementById('password').value;
+        repeatPassword = document.getElementById('repeatPassword').value;
+
+
+        if (name.trim() == '') {
+
+           validateName.innerHTML = '   <label id="validate-name" class="form-label" style="color: red">Name cannot be left blank</label>';
+            checkValidate = false;
+        } else {
+
+           validateName.innerHTML = '';
+            checkValidate = true;
+        }
+        // console.log(username.trim() == '')
+        if (username.trim() == '') {
+
+           validateUsername.innerHTML = '   <label class="form-label" style="color: red">UserName cannot be left blank</label>';
+            checkValidate = false;
+
+        } else {
+            let checkUsername = false;
+
+            if (listUser.length == 0) {
+                checkUsername = true;
+            }
+
+            for (let i = 0; i < listUser.length; i++) {
+                if (username === listUser[i].username) {
+
+                    validateUsername.innerHTML = '<label  class="form-label" style="color: red">Username already exists</label>';
+                    checkValidate = false;
+                    checkUsername = false;
+                    document.getElementById('btn-register').disabled = true;
+                    break;
+                } else {
+
+                    checkUsername = true;
+                }
+            }
+
+            if (checkUsername) {
+
+
+                validateUsername.innerHTML = '';
+                checkValidate = true;
+            }
+
+        }
+
+
+        if (email.trim() == '') {
+
+           validate_Email.innerHTML = '   <label  class="form-label" style="color: red">Email cannot be left blank</label>';
+            checkValidate = false;
+        } else {
+
+
+            if (!validateEmail(email)) {
+
+                validate_Email.innerHTML = ' <label  class="form-label" style="color: red">Email invalidate</label>';
+            } else {
+                let checkEmail = false;
+                if (listUser.length == 0) {
+                    checkEmail = true;
+                }
+                for (let i = 0; i < listUser.length; i++) {
+
+                    if (email === listUser[i].email) {
+
+                        validate_Email.innerHTML = '<label  class="form-label" style="color: red">email  already exists</label>';
+                        checkValidate = false;
+                        checkEmail = false;
+                        document.getElementById('btn-register').disabled = true;
+                        break;
+                    } else {
+                        checkEmail = true;
+                    }
+
+                }
+
+                if (checkEmail) {
+                    validate_Email.innerHTML = '';
+                    checkValidate = true;
+                }
+            }
+        }
+
+
+        if (password.trim() == '') {
+
+            validatePassword.innerHTML = '   <label  class="form-label" style="color: red">password cannot be left blank</label>';
+            checkValidate = false;
+
+        } else {
+            console.log( 'check trong else===',validateRepeatPassword)
+            validatePassword.innerText = '';
+            checkValidate = true;
+        }
+
+        if (repeatPassword !== password || repeatPassword.trim() == '') {
+            validateRepeatPassword.innerHTML = '   <p id="validate-repeatPassword"  class="form-label" style="color: red">password does not match</p>';
+            checkValidate = false;
+        } else {
+
+            validateRepeatPassword.innerText = '';
+            checkValidate = true;
+
+
+        }
+
+        console.log('check validate==',validateName == '' && validateUsername == '' && validate_Email == '' && validatePassword == '' && validateRepeatPassword == '')
+        console.log('validateName', validateName)
+        console.log('validateUsername', validateUsername)
+        console.log('validate_Email', validate_Email)
+        console.log('validatePassword', validatePassword)
+        console.log('validateRepeatPassword', validateRepeatPassword)
+        if (validateName.textContent == '' && validateUsername.textContent == '' && validate_Email.textContent == '' && validatePassword.textContent == '' && validateRepeatPassword.textContent == '') {
+
+            document.getElementById('btn-register').disabled = false;
+        } else {
+            document.getElementById('btn-register').disabled = true;
+        }
+        // if (checkValidate) {
+        //     document.getElementById('btn-register').disabled = false;
+        // } else {
+        //     document.getElementById('btn-register').disabled = true;
+        // }
+
+    }
+
+    function validateEmail(mail) {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+            return (true)
+        }
+        // alert("You have entered an invalid email address!")
+        return (false)
+    }
+
+    function register() {
+
+        if (checkValidate) {
+            let newId = 0;
+            if (listUser.length === 0) {
+                newId = 1;
+            } else {
+                newId = listUser[listUser.length - 1].id + 1;
+            }
+            let user = new User(newId, name, username, email, password);
+            listUser.push(user);
+            localStorage.removeItem('listUser');
+            localStorage.setItem('listUser', JSON.stringify(listUser));
+            document.getElementById('success').innerText = 'Register success';
+            // reset();
+            localStorage.setItem('key-register', 'Ok')
+            window.location.href = 'login.html';
+
+        }
+
+    }
+
+    // function reset() {
+    //     name = document.getElementById('name').value = '';
+    //     username = document.getElementById('username').value = '';
+    //     email = document.getElementById('email').value = '';
+    //     password = document.getElementById('password').value = '';
+    //     repeatPassword = document.getElementById('repeatPassword').value = '';
+    // }
+</script>
+</body>
+</html>
