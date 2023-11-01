@@ -16,14 +16,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
-        /*table,*/
-        /*th,*/
-        /*td {*/
-        /*    width: 600px;*/
-        /*    border: 1px solid black;*/
-        /*    border-collapse: collapse;*/
-        /*    text-align: center;*/
-        /*}*/
+
         p {
             color: red;
         }
@@ -32,6 +25,7 @@
 </head>
 <body style="text-align: center">
 <!--Đầu navbar-->
+
 <nav class="navbar navbar-expand-lg navbar-light  " style="background-color: aqua">
     <a class="navbar-brand" href="#">Home</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -55,23 +49,28 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">changer Avatar</a>
+
                     <div class="dropdown-divider"></div>
                     <a onclick="logOut()" class="dropdown-item" href="#" style="color: red">log Out</a>
                 </div>
+
             </li>
             <li class="nav-item">
                 <a class="nav-link disabled" href="#">Disabled</a>
             </li>
+
         </ul>
         <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <a href="upload.html"><img id="avatar" src="" style="border-radius: 50%;width: 50px;height: 50px"></a>
         </form>
     </div>
 </nav>
 <!--Cuối navbar-->
 <div class="input-group mb-3">
+
     <div class="input-group-prepend">
         <span class="input-group-text" id="basic-addon1">@</span>
     </div>
@@ -128,11 +127,13 @@
 <script>
 
     let name = localStorage.getItem('key-name');
+    let avatar = localStorage.getItem('key-avatar');
+
     if (name !== null) {
         document.getElementById('navbarDropdown').innerText = name;
         document.getElementById('Register').innerText = '';
         document.getElementById('login').innerText = '';
-
+        document.getElementById('avatar').src = avatar;
     }
 
 
@@ -153,7 +154,10 @@
     function logOut() {
         sessionStorage.setItem("reloading", "true");
         localStorage.removeItem('key-name');
+        localStorage.removeItem('key-id');
+        localStorage.removeItem('key-avatar');
         window.location.reload();
+
     }
 
     let students = JSON.parse(localStorage.getItem('students'));
@@ -184,10 +188,7 @@
 
         let newStudent = new Students(newId, newName, newAge, newAddress);
 
-        // if (name.trim() === "") {
-        //     alert("The name is required! Please try again!");
-        //     return;
-        // }
+
         if (checkValidate) {
             students.push(newStudent);
             localStorage.removeItem('students');

@@ -340,6 +340,8 @@
                 if (username == listUser[i].username && password == listUser[i].password) {
                     localStorage.removeItem('key-register');
                     localStorage.setItem('key-name', listUser[i].name);
+                    localStorage.setItem('key-avatar', listUser[i].avatar);
+                    localStorage.setItem('key-id', listUser[i].id);
 
                     window.location.href = 'index.html';
 
