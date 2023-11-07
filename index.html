@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -64,11 +65,19 @@
         <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            <a href="upload.html"><img id="avatar" src="" style="border-radius: 50%;width: 50px;height: 50px"></a>
+            <a href="upload.html"><img id="avatar"
+                                       src="https://firebasestorage.googleapis.com/v0/b/dm1deploy.appspot.com/o/images%2FOIP.jpg?alt=media&token=da771e85-a784-4499-9e73-bbb5da96fde8&_gl=1*1kre81z*_ga*OTYxMjgwMjUxLjE2OTg3Njg5NjU.*_ga_CW55HF8NVT*MTY5ODc2ODk2NS4xLjEuMTY5ODc3MTg5Mi41Mi4wLjA."
+                                       style="border-radius: 50%;width: 50px;height: 50px"></a>
         </form>
     </div>
 </nav>
 <!--Cuối navbar-->
+<progress value="0" max="100" id="uploader">0%</progress>
+<input type="file" value="upload" accept=".jpg" id="fileButton">
+<p id="validate-avatar" style="color: red"></p>
+<h1>Hello GFG</h1>
+<!--<div id="imgDiv"></div>-->
+<img id="avatarStudent" src="" alt="">
 <div class="input-group mb-3">
 
     <div class="input-group-prepend">
@@ -114,6 +123,7 @@
     <thead class="thead-dark">
     <tr>
         <th>STT</th>
+        <th>AVTATAR</th>
         <th>NAME</th>
         <th>AGE</th>
         <th>ADDRESS</th>
@@ -126,8 +136,101 @@
 
 <script>
 
+    let avatar = document.getElementById('fileButton').value;
+    let checkUploadAvatar = true;
+    if (avatar == '') {
+        document.getElementById('validate-avatar').innerText = 'no avatar yet'
+        document.getElementById('Create').disabled = true
+        checkUploadAvatar = false;
+    }
+    const firebaseConfig = {
+        apiKey: "AIzaSyBaLzeHuOR2B4g1s19dwBWX02wd9Ynr5d0",
+        authDomain: "dm1deploy.firebaseapp.com",
+        projectId: "dm1deploy",
+        storageBucket: "dm1deploy.appspot.com",
+        messagingSenderId: "529395444573",
+        appId: "1:529395444573:web:7b8ad71282063f84a356b4",
+        measurementId: "G-HWP4XYRTJ1"
+    };
+
+
+    var fbBucketName = 'images';
+
+    // get elements
+    var uploader = document.getElementById('uploader');
+    var fileButton = document.getElementById('fileButton');
+    console.log('uploader===', uploader.value)
+    console.log('fileButton===', fileButton.value)
+
+    // listen for file selection
+    fileButton.addEventListener('change', async function (e) {
+
+        // what happened
+        console.log('file upload event', e);
+
+        // get file
+        var file = e.target.files[0];
+
+        // create a storage ref
+        var storageRef = firebase.storage().ref(`${fbBucketName}/${file.name}`);
+
+        // upload file
+        var uploadTask = storageRef.put(file);
+
+
+        // update progress bar
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+            function (snapshot) {
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                uploader.value = progress;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case firebase.storage.TaskState.PAUSED: // or 'paused'
+                        console.log('Upload is paused');
+                        break;
+                    case firebase.storage.TaskState.RUNNING: // or 'running'
+                        console.log('Upload is running');
+                        break;
+                }
+            }, function (error) {
+
+
+                switch (error.code) {
+                    case 'storage/unauthorized':
+                        // User doesn't have permission to access the object
+                        break;
+
+                    case 'storage/canceled':
+                        // User canceled the upload
+                        break;
+
+                    case 'storage/unknown':
+                        // Unknown error occurred, inspect error.serverResponse
+                        break;
+                }
+            }, function () {
+
+                var downloadURL = uploadTask.snapshot.downloadURL;
+                console.log('downloadURL=====', downloadURL)
+                if (downloadURL) {
+                    document.getElementById('validate-avatar').innerText = ''
+                }
+                console.log('avatar ====', avatar)
+
+                console.log('downloadURL=======', downloadURL)
+                localStorage.setItem('uploadAvatarKey', downloadURL)
+
+                let divLocation = document.getElementById("avatarStudent");
+
+                divLocation.src = downloadURL;
+                divLocation.width = 200;
+                divLocation.height = 200;
+
+            })
+    });
     let name = localStorage.getItem('key-name');
-    let avatar = localStorage.getItem('key-avatar');
+
 
     if (name !== null) {
         document.getElementById('navbarDropdown').innerText = name;
@@ -135,7 +238,6 @@
         document.getElementById('login').innerText = '';
         document.getElementById('avatar').src = avatar;
     }
-
 
     function myFunction() {
 
@@ -172,6 +274,7 @@
     let newName
     let newAge
     let newAddress
+    let newAvatar
 
     function createStudent() {
         console.log('students ===', students.length)
@@ -185,21 +288,20 @@
         newName = document.getElementById('name').value;
         newAge = document.getElementById('age').value;
         newAddress = document.getElementById('address').value;
+        newAvatar = localStorage.getItem('uploadAvatarKey')
 
-        let newStudent = new Students(newId, newName, newAge, newAddress);
+        let newStudent = new Students(newId, newName, newAge, newAddress, newAvatar);
 
+        students.push(newStudent);
+        localStorage.removeItem('students');
 
-        if (checkValidate) {
-            students.push(newStudent);
-            localStorage.removeItem('students');
-            localStorage.setItem('students', JSON.stringify(students))
-            showListStudent();
-        }
-
-
+        localStorage.setItem('students', JSON.stringify(students))
+        localStorage.removeItem('uploadAvatarKey')
+        showListStudent();
     }
 
     function validate() {
+        let avatar = localStorage.getItem('uploadAvatarKey');
         newName = document.getElementById('name').value;
         newAge = document.getElementById('age').value;
         newAddress = document.getElementById('address').value;
@@ -234,7 +336,6 @@
         } else {
             document.getElementById('Create').disabled = true;
         }
-
     }
 
     function showListStudent() {
@@ -320,6 +421,7 @@
         console.log('id==', id);
         for (let i = 0; i < students.length; i++) {
             if (id === students[i].id) {
+                document.getElementById('avatar-update').src = students[i].avatar;
                 document.getElementById('name-update').value = students[i].name;
                 document.getElementById('age-update').value = students[i].age;
                 document.getElementById('address-update').value = students[i].address;
@@ -330,7 +432,6 @@
 
             }
         }
-
     }
 
     function showDelete(id) {
@@ -339,8 +440,6 @@
         for (let i = 0; i < students.length; i++) {
             if (id === students[i].id) {
                 document.getElementById('name-delete').innerText = students[i].name;
-
-
             }
         }
     }

@@ -1,7 +1,4 @@
-//BE SURE TO PROTECT EVERYTHING IN THE CONFIG
-//DON'T COMMIT IT!!!
-
-// Initialize Firebase
+localStorage.setItem('key-avatar', avatar)
 
 const firebaseConfig = {
     apiKey: "AIzaSyBaLzeHuOR2B4g1s19dwBWX02wd9Ynr5d0",
@@ -14,9 +11,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-// firebase bucket name
-// REPLACE WITH THE ONE YOU CREATE
-// ALSO CHECK STORAGE RULES IN FIREBASE CONSOLE
+
 var fbBucketName = 'images';
 
 // get elements
@@ -38,8 +33,7 @@ fileButton.addEventListener('change', async function (e) {
     // upload file
     var uploadTask = storageRef.put(file);
 
-    // The part below is largely copy-pasted from the 'Full Example' section from
-    // https://firebase.google.com/docs/storage/web/upload-files
+
 
     // update progress bar
     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
@@ -58,8 +52,7 @@ fileButton.addEventListener('change', async function (e) {
             }
         }, function (error) {
 
-            // A full list of error codes is available at
-            // https://firebase.google.com/docs/storage/web/handle-errors
+
             switch (error.code) {
                 case 'storage/unauthorized':
                     // User doesn't have permission to access the object
@@ -74,22 +67,17 @@ fileButton.addEventListener('change', async function (e) {
                     break;
             }
         }, function () {
-            // Upload completed successfully, now we can get the download URL
-            // save this link somewhere, e.g. put it in an input field
+
             var downloadURL = uploadTask.snapshot.downloadURL;
 
             console.log('downloadURL=======',downloadURL)
             localStorage.setItem('uploadAvatarKey', downloadURL)
 
             let divLocation = document.getElementById("image");
-            // let imgElement = document.createElement("img");
-            // imgElement.src = downloadURL
-            // imgElement.width = 200;
-            // imgElement.height = 200;
+
             divLocation.src = downloadURL;
             divLocation.width = 200;
             divLocation.height = 200;
-            // console.log('pic ==', image)
-            // divLocation.append(imgElement);
+
         })
 });

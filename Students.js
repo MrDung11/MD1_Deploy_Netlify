@@ -3,12 +3,15 @@ class Students {
     name;
     age;
     address;
+    avatar;
 
-    constructor(id, name, age, address) {
+
+    constructor(id, name, age, address, avatar) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.address = address;
+        this.avatar = avatar;
     }
 
     setId(id) {
@@ -17,6 +20,14 @@ class Students {
 
     getId() {
         return this.id;
+    }
+
+    setAvatar(avatar){
+        this.avatar = avatar;
+    }
+
+    getAvatar(){
+        return this.avatar;
     }
 
     setName(name) {
